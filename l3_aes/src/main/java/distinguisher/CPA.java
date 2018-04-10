@@ -1,8 +1,11 @@
 package distinguisher;
 
 import com.sun.tools.javac.util.Pair;
+import encryption.Encryptor;
+import encryption.EncryptorCBC;
 import utils.EncMode;
 
+import javax.crypto.NoSuchPaddingException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,8 +16,6 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static encryption.Encryption.challenge;
 
 public class CPA {
 
@@ -27,20 +28,21 @@ public class CPA {
 	private static Key key;
 	private static EncMode encMode;
 
-	private final static String MESSSAGE_1 = "1234567890ABCDEF";
-	private final static String MESSSAGE_2 = "ABCDEF1234567890";
+	private final static String MESSSAGE_1 = "1234567890ABCDEF1";
+	private final static String MESSSAGE_2 = "ABCDEF12345678902";
 	private final static String MESSSAGE_3 = "ABC1234567890DEF";
 
-	public static void main(String[] args) throws UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+	public static void main(String[] args) throws UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, NoSuchPaddingException {
 
 		readKey();
 		List<String> ciphertexts = new ArrayList();
+		Encryptor enc = new EncryptorCBC();
 
 		while (ciphertexts.size() < 2) {
 			String xored1 = xor(MESSSAGE_1, iv);
 			String xored2 = xor(MESSSAGE_2, iv);
 
-			Pair<String, Integer> result = challenge(Arrays.asList(xored1, xored2), key, EncMode.CBC);
+			Pair<String, Integer> result = enc.challenge(Arrays.asList(xored1, xored2), key, EncMode.CBC);
 
 			System.out.println(result.fst);
 			if (!ciphertexts.contains(result.fst)) {
@@ -52,7 +54,7 @@ public class CPA {
 		String xored1 = xor(MESSSAGE_1, iv);
 		String xored3 = xor(MESSSAGE_3, iv);
 
-		Pair<String, Integer> result = challenge(Arrays.asList(xored1, xored3), key, EncMode.CBC);
+		Pair<String, Integer> result = enc.challenge(Arrays.asList(xored1, xored3), key, EncMode.CBC);
 
 		int b = 0;
 		if (!ciphertexts.contains(result.fst)) {

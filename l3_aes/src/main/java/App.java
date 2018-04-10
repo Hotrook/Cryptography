@@ -1,7 +1,9 @@
 import com.sun.tools.javac.util.Pair;
 import encryption.Encryption;
+import encryption.Encryptor;
 import utils.EncMode;
 
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,9 +24,9 @@ public class App {
 	private static EncMode encMode;
 	private static AppMode appMode;
 
-	private enum AppMode {challenge, encryption_oracle}
+	private enum AppMode {challenge, encryption_oracle, def}
 
-	public static void main(String[] args) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
+	public static void main(String[] args) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, NoSuchPaddingException {
 
 		getInput();
 
@@ -36,8 +38,9 @@ public class App {
 		}
 	}
 
-	private static void challengeMode() {
+	private static void challengeMode() throws NoSuchAlgorithmException, NoSuchPaddingException {
 		Scanner input = new Scanner(System.in);
+		Encryptor enc = Encryption.getEncryptor(encMode);
 		while (true) {
 			String first = input.nextLine();
 			if (first == "q") {
@@ -45,17 +48,18 @@ public class App {
 			}
 			String second = input.nextLine();
 
-			Pair<String, Integer> b = Encryption.challenge(Arrays.asList(first, second), key, encMode);
+			Pair<String, Integer> b = enc.challenge(Arrays.asList(first, second), key, encMode);
 			System.out.println(b.fst);
 		}
 		input.close();
 	}
 
-	private static void cipherMessages() {
+	private static void cipherMessages() throws NoSuchAlgorithmException, NoSuchPaddingException {
 		System.out.println("Give number of messages to encrypt: ");
 		Scanner scanner = new Scanner(System.in);
 		int n = scanner.nextInt();
 		List<File> files = new ArrayList<>(Collections.nCopies(n, null));
+		Encryptor enc = Encryption.getEncryptor(encMode);
 
 		System.out.println("Give files with messages: ");
 		for (int i = 0; i < n; ++i) {
@@ -63,19 +67,26 @@ public class App {
 			File file = new File(filename);
 			files.set(i, file);
 		}
-		Encryption.encryptFiles(encMode, files, key);
+		enc.encryptFiles(files, key);
 	}
 
 	private static void getInput() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
+		String keystoreFilePath;
+		appMode = readAppMode();
+		if (appMode == AppMode.def) {
+			keystoreFilePath = "src/main/resources/keystore.jceks";
+			encMode = EncMode.CBC;
+			keyId = "aes_key";
+			appMode = AppMode.encryption_oracle;
+		} else {
+			keystoreFilePath = readKeystorePath();
+			keyId = readKeyId();
+			encMode = readEncMode();
+		}
 		keystore = KeyStore.getInstance("jceks");
 		password = (String) Files.lines(Paths.get(configFilePath)).toArray()[0];
-		String keystoreFilePath = readKeystorePath();
-		System.out.println(keystoreFilePath);
-		keyId = readKeyId();
-		encMode = readEncMode();
 		keystore.load(new FileInputStream(keystoreFilePath), password.toCharArray());
 		key = keystore.getKey(keyId, password.toCharArray());
-		appMode = readAppMode();
 	}
 
 	private static AppMode readAppMode() {
@@ -110,6 +121,3 @@ public class App {
 		return EncMode.valueOf(input);
 	}
 }
-
-//src/main/resources/keystore.jceks
-//aes_key
