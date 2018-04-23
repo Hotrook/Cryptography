@@ -40,7 +40,10 @@ int main(){
     }
     myFile.close();
 
-    crack( ciphertexts[19], possibleKeys, start, stop );
+    for( int i = 19 ; i <= 19 ; ++i )
+    {
+        crack( ciphertexts[i], possibleKeys, start, stop );
+    }
 }
 
 void crack( string & c, vector<vector<int>> & possibleKeys, int start, int stop )
@@ -66,10 +69,13 @@ void checkKey( string & c, vector<vector<int>> & possibleKeys, int current, int 
 void printText( string & c, int start, int stop, vector<int> & key )
 {
     for( int i = start ; i < stop ; ++i ){
-        int position = i * 8;
-        int number = convertToNumber(c, position);
-        int xorNumber = number ^ key[ i - start ];
-        cout << char(xorNumber);
+        if( i < c.length( ) )
+        {
+            int position = i * 8;
+            int number = convertToNumber(c, position);
+            int xorNumber = number ^ key[ i - start ];
+            cout << char(xorNumber);
+        }
     }
 
     cout << endl;

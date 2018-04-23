@@ -2,3 +2,5 @@
 **/*.iml
 **/files
 **/*.txt
+**/target
+**/.DS_Store

@@ -81,7 +81,7 @@ bool checkCiphertext( string & c, int position, int key )
 
     if(
         (xorNumber >= 48 && xorNumber <= 57 )
-        || ( xorNumber >= 32 && xorNumber <= 95 )
+        || ( xorNumber >= 65 && xorNumber <= 90 )
         || ( xorNumber >= 97 && xorNumber <= 127 )
         || ( xorNumber == 32 || xorNumber == 33 ) //  space and !
         || ( xorNumber >= 44 && xorNumber <= 46 ) // , - .
