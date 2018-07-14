@@ -1,3 +1,5 @@
+import Encryption.AESEncryptor;
+import Encryption.EncryptionException;
 import Encryption.Encryptor;
 import Puzzler.Puzzler;
 import Transmitter.Transmitter;
@@ -6,10 +8,10 @@ import java.util.Date;
 
 public class App {
 
-	public static void main(String[] args) {
-		Encryptor enc = new Encryptor();
+	public static void main(String[] args) throws EncryptionException {
+		Encryptor enc = new AESEncryptor();
 
-		Puzzler generator = new Puzzler(32, enc);
+		Puzzler generator = new Puzzler(16, enc);
 		Puzzler receiver = new Puzzler();
 
 		Transmitter transmitter = new Transmitter(generator, receiver);

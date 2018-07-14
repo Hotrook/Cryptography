@@ -1,5 +1,6 @@
 package Puzzler;
 
+import Encryption.EncryptionException;
 import Encryption.Encryptor;
 import Transmitter.Transmitter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -16,7 +17,6 @@ public class Puzzler {
 	private long N;
 	private int n;
 	private int receivedMessages;
-	private PuzzlerMode mode;
 	private Transmitter transmitter;
 	private Encryptor enc;
 	private byte[] k1;
@@ -41,7 +41,7 @@ public class Puzzler {
 		this.enc = enc;
 	}
 
-	public void run() {
+	public void run() throws EncryptionException {
 		transmitter.transmit(N, enc);
 		generateKeys();
 
@@ -53,7 +53,7 @@ public class Puzzler {
 		}
 	}
 
-	private void sendMessage(int i) {
+	private void sendMessage(int i) throws EncryptionException {
 		byte[] id = enc.encrypt(toBinaryString(i), k1);
 		byte[] key = enc.encrypt(id, k2);
 		byte[] newKey = enc.generateKey(n);
@@ -81,7 +81,8 @@ public class Puzzler {
 		k2 = enc.generateKey(n);
 	}
 
-	public void receiveBack(byte[] id) {
+	public void receiveBack(byte[] id)
+	throws EncryptionException {
 		System.out.printf("Received id is: ");
 		printByteArray(id);
 		byte[] key = enc.encrypt(id, k2);
@@ -98,8 +99,7 @@ public class Puzzler {
 		receivedMessages = 0;
 	}
 
-	public void receiveMessage(byte[] ciphertext) {
-
+	public void receiveMessage(byte[] ciphertext) throws EncryptionException {
 		if (receivedMessages == toBreakId) {
 			toBreak = ciphertext;
 		}
@@ -109,7 +109,7 @@ public class Puzzler {
 		}
 	}
 
-	private void breakAndSendId() {
+	private void breakAndSendId() throws EncryptionException {
 		byte[] message = decrypt(toBreak);
 		byte[] id = extractId(message);
 		byte[] key = extractKey(message);
@@ -140,14 +140,13 @@ public class Puzzler {
 		return Arrays.copyOfRange(message, 4, 8);
 	}
 
-	private byte[] decrypt(byte[] toBreak) {
+	private byte[] decrypt(byte[] toBreak)
+	throws EncryptionException {
 		byte[] result = null;
 		long i = 0;
 		while (result == null) {
-			if (i % 1000000 == 0) {
-				System.out.println(i);
-			}
-			byte[] message = enc.decrypt(i, toBreak);
+			byte[] key = enc.createKey(i);
+			byte[] message = enc.decrypt(key, toBreak);
 			long extractedN = extractN(message);
 			if (extractedN == N) {
 				result = message;
@@ -161,7 +160,7 @@ public class Puzzler {
 		byte[] bytes = Arrays.copyOfRange(message, 8, 16);
 		ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
 		buffer.put(bytes);
-		buffer.flip();//need flip
+		buffer.flip();
 		return buffer.getLong();
 	}
 

@@ -1,5 +1,6 @@
 package Transmitter;
 
+import Encryption.EncryptionException;
 import Encryption.Encryptor;
 import Puzzler.Puzzler;
 
@@ -13,11 +14,11 @@ public class Transmitter {
 		this.receiver = receiver;
 	}
 
-	public void transmit(byte[] ciphertext) {
+	public void transmit(byte[] ciphertext) throws EncryptionException {
 		receiver.receiveMessage(ciphertext);
 	}
 
-	public void transmitBack(byte[] id) {
+	public void transmitBack(byte[] id) throws EncryptionException {
 		generator.receiveBack(id);
 	}
 
