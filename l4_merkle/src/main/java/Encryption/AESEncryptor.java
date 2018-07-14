@@ -4,9 +4,8 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-
-import static utils.Utils.toBinaryLongStringBytes;
 
 public class AESEncryptor implements Encryptor {
 
@@ -46,7 +45,7 @@ public class AESEncryptor implements Encryptor {
 
 	@Override
 	public byte[] createKey(long k) {
-		return toBinaryLongStringBytes(k);
+		return toBinaryBytes(k);
 	}
 
 	private byte[] encrypt(byte[] ciphertext, byte[] k, int operationType) throws EncryptionException {
@@ -69,6 +68,10 @@ public class AESEncryptor implements Encryptor {
 		System.arraycopy(k, 0, result, 0, k.length);
 
 		return result;
+	}
+
+	private byte[] toBinaryBytes(long n) {
+		return ByteBuffer.allocate(Long.BYTES).putLong(n).array();
 	}
 
 }
