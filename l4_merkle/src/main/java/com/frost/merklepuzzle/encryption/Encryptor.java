@@ -1,4 +1,4 @@
-package Encryption;
+package com.frost.merklepuzzle.encryption;
 
 public interface Encryptor {
 
@@ -8,7 +8,6 @@ public interface Encryptor {
 
 	byte[] decrypt(byte[] key, byte[] ciphertext) throws EncryptionException;
 
-	byte[] createKey(long k);
-
+	byte[] createKey(long k, int n);
 }
 

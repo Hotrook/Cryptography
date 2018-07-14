@@ -1,8 +1,8 @@
-package Transmitter;
+package com.frost.merklepuzzle.transmitter;
 
-import Encryption.EncryptionException;
-import Encryption.Encryptor;
-import Puzzler.Puzzler;
+import com.frost.merklepuzzle.encryption.EncryptionException;
+import com.frost.merklepuzzle.encryption.Encryptor;
+import com.frost.merklepuzzle.puzzler.Puzzler;
 
 public class Transmitter {
 
@@ -22,7 +22,7 @@ public class Transmitter {
 		generator.receiveBack(id);
 	}
 
-	public void transmit(long n, Encryptor enc) {
-		receiver.receiveInit(n, enc);
+	public void transmit(long N, int n, Encryptor enc) {
+		receiver.receiveInit(N, n, enc);
 	}
 }

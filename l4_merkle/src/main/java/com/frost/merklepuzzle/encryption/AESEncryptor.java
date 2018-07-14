@@ -1,12 +1,14 @@
-package Encryption;
+package com.frost.merklepuzzle.encryption;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
-import static utils.Utils.toBinaryLongStringBytes;
+import static com.frost.merklepuzzle.utils.Utils.toBinaryBytes;
+
 
 public class AESEncryptor implements Encryptor {
 
@@ -31,8 +33,7 @@ public class AESEncryptor implements Encryptor {
 	}
 
 	@Override
-	public byte[] decrypt(byte[] ciphertext, byte[] k)
-	throws EncryptionException {
+	public byte[] decrypt(byte[] ciphertext, byte[] k) throws EncryptionException {
 		return encrypt(ciphertext, k, Cipher.DECRYPT_MODE);
 	}
 
@@ -45,8 +46,9 @@ public class AESEncryptor implements Encryptor {
 	}
 
 	@Override
-	public byte[] createKey(long k) {
-		return toBinaryLongStringBytes(k);
+	public byte[] createKey(long k, int n) {
+		byte[] bytes = toBinaryBytes(k);
+		return Arrays.copyOfRange(bytes, bytes.length - n / 8, bytes.length);
 	}
 
 	private byte[] encrypt(byte[] ciphertext, byte[] k, int operationType) throws EncryptionException {
