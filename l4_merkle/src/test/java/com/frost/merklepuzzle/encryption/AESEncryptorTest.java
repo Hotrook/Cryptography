@@ -18,4 +18,10 @@ public class AESEncryptorTest {
 		Assert.assertArrayEquals(ORIGINAL_MESSAGE, actualResult);
 	}
 
+	@Test(expected = EncryptionException.class)
+	public void When_KeyIsTooLong_Then_EncryptionErrorIsThrown() throws EncryptionException {
+		Encryptor enc = new AESEncryptor();
+		byte[] key = enc.generateKey(200);
+	}
+
 }

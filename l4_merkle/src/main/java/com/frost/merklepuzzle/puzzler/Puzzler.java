@@ -74,7 +74,7 @@ public class Puzzler {
 		return result;
 	}
 
-	private void generateKeys() {
+	private void generateKeys() throws EncryptionException {
 		idGeneratorKey = enc.generateKey(n);
 		idKey = enc.generateKey(n);
 	}

@@ -38,7 +38,10 @@ public class AESEncryptor implements Encryptor {
 	}
 
 	@Override
-	public byte[] generateKey(int n) {
+	public byte[] generateKey(int n) throws EncryptionException {
+		if (n > 16 * 8) {
+			throw new EncryptionException("Requested key size is too long.");
+		}
 		byte[] result = new byte[n / 8];
 		secureRandom.nextBytes(result);
 
