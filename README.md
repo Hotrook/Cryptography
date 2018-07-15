@@ -1,6 +1,6 @@
 # Cryptography
 
-This is repo I used for implementing task for `Cryptography` course on my CS studies.
+This is repo I used for implementing tasks for `Cryptography` course on my CS studies.
 
 This repo consist of four projects:
 - `l1_prng` - LCG cracker
