@@ -19,12 +19,12 @@ int main(){
     LCGCracker cracker;
     LCGParams lcgParams = cracker.crack(rands);
 
-    cout << lcgParams.m + lcgParams.n << endl;
-    cout << lcgParams.c << endl;
-    cout << lcgParams.n << endl;
+    cout << "m: " << lcgParams.m + lcgParams.n << endl;
+    cout << "c: " << lcgParams.c << endl;
+    cout << "n: " << lcgParams.n << endl;
 
-    cout << ( rands[ 9 ] * lcgParams.m + lcgParams.c ) % lcgParams.n << endl;
-    cout << rand() << endl;
+    cout << "Next rand using calculated arguments: " << ( rands[ 9 ] * lcgParams.m + lcgParams.c ) % lcgParams.n << endl;
+    cout << "Next rand using rand(): " << rand() << endl;
 
     return 0;
 }

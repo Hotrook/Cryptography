@@ -36,9 +36,9 @@ int main()
     LCGCracker cracker;
     LCGParams lcgParams = cracker.crack(rands);
 
-    cout << lcgParams.m << endl;
-    cout << lcgParams.c << endl;
-    cout << lcgParams.n << endl;
+    cout << "m: " << lcgParams.m << endl;
+    cout << "c: " << lcgParams.c << endl;
+    cout << "n: " << lcgParams.n << endl;
 
     return 0;
 }
