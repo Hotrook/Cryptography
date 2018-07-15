@@ -4,3 +4,6 @@
 **/*.txt
 **/target
 **/.DS_Store
+**/keystore.jceks
+logs/
+
