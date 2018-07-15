@@ -9,6 +9,3 @@ z1: main.cpp
 
 crack: cracking.cpp
 	$(CC) -o ../$@ $^ $(CFLAGS)
-
-debug: main.cpp
-	$(CC) -o ../$@ $^ $(DEBUGFLAGS)
