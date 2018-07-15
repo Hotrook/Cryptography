@@ -17,7 +17,7 @@ Two exucatables will be produced:
 - `app1` - it cracks LCG implemented in `LCGCracker`
 - `app2` - it cracks `rand()` from `glibc`
 
-Two run this apps type:
+To run this apps type:
 ```console
 foo@bar:~$ ./app1
 foo@bar:~$ ./app2
